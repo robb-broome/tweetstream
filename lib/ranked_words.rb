@@ -39,9 +39,7 @@ class RankedWords
 
   def inspect
     "Total word count: #{@total_word_count}\n" <<
-    # "Unique word count: #{@unique_words.count}\n" <<
-    # "Total meaningful word count: #{unique_meaningful_words.count}\n" <<
-    "Top meaningful words: #{top(10)}"
+    "Top meaningful words: #{top(10).join(', ')}"
   end
 
 end

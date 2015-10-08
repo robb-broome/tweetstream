@@ -9,6 +9,9 @@ task :run, [:duration, :verbose, :persist] do |task, args|
     analyzer.capture
   rescue Interrupt => e
     puts e.message
+  rescue => e
+    puts "Error: #{e.message}"
+    raise
   ensure
     analyzer.finish
   end
