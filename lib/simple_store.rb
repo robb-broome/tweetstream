@@ -1,5 +1,7 @@
 class SimpleStore
+
   require 'yaml'
+
   attr_accessor :attrs, :store_name
   def initialize store_name = 'count_store.yml'
     @store_name = store_name
@@ -19,13 +21,16 @@ class SimpleStore
     persist!
   end
 
+  def clear
+    File.delete store_name
+  end
+
+  private
+
   def persist!
     File.open(store_name, 'w') do |file|
       file.write attrs.to_yaml
     end
   end
 
-  def clear
-    File.delete store_name
-  end
 end
