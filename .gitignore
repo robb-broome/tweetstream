@@ -1,0 +1,13 @@
+.env
+
+## Environment normalisation:
+/.bundle/
+/vendor/bundle
+/lib/bundler/man/
+
+*.swp
+*.swo
+*.swn
+*~
+
+.DS_Store
