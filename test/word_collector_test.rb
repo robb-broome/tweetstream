@@ -1,13 +1,33 @@
 require_relative 'test_helper'
 
+describe Store do
+  before :each do
+    cleanup_files
+  end
+  it 'has attrs even if no file is present' do
+    name = 'non-existant-file'
+    File.delete name
+    store = Store.new name
+    store.attrs.must_equal(Hash.new)
+  end
+
+  it 'persists values' do
+    store_name = 'non-existant-file'
+    store = Store.new store_name
+    store.increment :random, 1
+    new_store = Store.new store_name
+    new_store.attrs.must_equal random: 1
+  end
+end
 describe RankedWords do
-  let(:stopwords) {StopWords.new}
+  let(:stopwords) {StopWords.new.words}
   let(:rankings) {RankedWords.new stopwords}
   let(:tweet) {'yo cubs win'}
 
   it 'accepts a tweet' do
     rankings << tweet
-    rankings.tweets.must_include tweet
+    included =  rankings.unique_words <= Set.new(tweet.split)
+    included.must_equal true
   end
 
   it 'filters basic stopwords' do
