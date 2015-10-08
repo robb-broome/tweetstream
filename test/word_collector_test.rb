@@ -1,27 +1,42 @@
 require_relative 'test_helper'
 
-describe Store do
-  before :each do
-    cleanup_files
+def cleanup_storage
+  Dir['*.yml'].each do |file|
+    File.delete file
   end
-  it 'has attrs even if no file is present' do
-    name = 'non-existant-file'
-    File.delete name
-    store = Store.new name
+end
+
+describe :storage do
+  after :each do
+    cleanup_storage
+  end
+
+  subject {SimpleStore}
+
+  let(:store_name) {"#{Time.now.to_f.to_s}.yml"}
+  let(:store) {subject.new store_name}
+
+  it 'has attrs even if no store is present' do
     store.attrs.must_equal(Hash.new)
   end
 
   it 'persists values' do
-    store_name = 'non-existant-file'
-    store = Store.new store_name
     store.increment :random, 1
-    new_store = Store.new store_name
+    new_store = subject.new store_name
     new_store.attrs.must_equal random: 1
   end
+
+  it 'clears the store' do
+    store.increment :random, 1
+    store.clear
+    new_store = subject.new store_name
+    new_store.attrs.must_equal Hash.new
+  end
 end
+
 describe RankedWords do
   let(:stopwords) {StopWords.new.words}
-  let(:rankings) {RankedWords.new stopwords}
+  let(:rankings) {RankedWords.new store: SimpleStore.new}
   let(:tweet) {'yo cubs win'}
 
   it 'accepts a tweet' do
@@ -47,7 +62,6 @@ describe RankedWords do
     rankings << 'cubs win!'
     rankings << 'pirates'
     rankings.top(10).must_equal ['cubs','win!','pirates']
-
   end
 
   it 'has a total count of words' do
