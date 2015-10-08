@@ -49,6 +49,7 @@ class TwitterAnalyzer
                                   duration: duration,
                                   verbose: verbose)
   end
+
   def save_state!
     store.clear and return if time_expired?
     store.save :time_remaining, time_remaining
